@@ -130,3 +130,4 @@ Start-Service "Zabbix Agent 2"
 start-sleep -Seconds 3
 Get-service "Zabbix Agent 2"
 
+#test git
