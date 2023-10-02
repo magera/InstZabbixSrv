@@ -5,16 +5,15 @@ Function GetPSVersion {
     $PSVersion = $PSVersionTable.PSVersion
     return [int]$PSVersion.Major
 }
-GetPSVersion
 function GetProductType {
     $PSVersion = GetPSVersion
     if ($PSVersion -gt 2) {
         $osInfo = Get-CimInstance -ClassName Win32_OperatingSystem
-        Write-Host "new"
+        #Write-Host "new"
     }
     else {
         $osInfo = Get-WmiObject -Class Win32_OperatingSystem
-        Write-Host "old"
+        #Write-Host "old"
     }
     
     if ($osInfo.ProductType -eq 1) {
@@ -34,7 +33,6 @@ function GetProductType {
         return 0
     }
 }
-GetProductType
 Function GetOSVersion {
     $OSVersion = [System.Environment]::OSVersion.Version.ToString()  
     $OSVersion = $OSVersion.Split(".")
@@ -105,8 +103,6 @@ function SetZabbixConfig {
     Write-Host $LogPath
     (Get-Content -Path $ConfPath).Replace('# LogFile=c:\zabbix_agent2.log','LogFile='+$LogPath).Replace('Server=127.0.0.1', 'Server=192.168.77.70').Replace('ServerActive=127.0.0.1', 'ServerActive=192.168.77.70').Replace('Hostname=Windows host', '#Hostname=Windows host').Replace('# HostnameItem=system.hostname', 'HostnameItem=system.hostname').Replace('# HostMetadata=', 'HostMetadata='+$HostMetadata) | Set-Content -Path $ConfPath
 }
-
-#-Path $PSScriptRoot\Script\zabbix_agent2\conf\zabbix_agent2.conf
 Function Main {
     switch (GetWindowsVersionName) {
         "Server 2008" {Write-Host "Make config for Windows Server 2008" ; SetZabbixConfigOldReplace -HostMetadata 'Windows2008	a4yhhgdsmsdAh2353923jdhfs76Mnd720612073203hdfsdkj'}
@@ -131,8 +127,6 @@ Main
 &$ScriptPath\bin\zabbix_agent2.exe --config $ConfPath --install
 Start-Sleep -Seconds 3
 Start-Service "Zabbix Agent 2"
-#
 start-sleep -Seconds 3
 Get-service "Zabbix Agent 2"
 
-#pause
